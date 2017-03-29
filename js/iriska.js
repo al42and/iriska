@@ -75,7 +75,9 @@ window.onload = function () {
     };
 
     resetButton.onclick = function() {
+        var cropBox = cropper.getCropBoxData();
         cropper.reset();
+        cropper.setCropBoxData(cropBox);
         rotateSlider.value = 0;
     };
 
@@ -83,6 +85,8 @@ window.onload = function () {
     rotateSlider.onchange = function () {
         cropper.rotateTo(rotateSlider.value);
     };
+    // Continuously update image angle
+    rotateSlider.onmousemove = rotateSlider.onchange;
 
 
     if (URL) {
