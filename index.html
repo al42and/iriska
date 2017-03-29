@@ -3,35 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>иRISка</title>
-    <link  href="cropperjs-1.0.0-rc/cropper.min.css" rel="stylesheet">
+    <link href="cropperjs-1.0.0-rc/cropper.min.css" rel="stylesheet"/>
     <script src="cropperjs-1.0.0-rc/cropper.min.js"></script>
+    <link href="pure-0.6.2/pure.min.css" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-<input type="file" id="inputImage" />
-<button type="button" id="search_button">Искать!</button>
-<input type="checkbox" id="search_auto" value="false" name=""/>
-<label for="search_auto">АвтоИскать</label>
-<br/>
-<img id="image" src="1spoydjfbrjrMAL.jpg"/>
-<br/>
-
-<p>
-    Как пользоваться:
-</p>
-<ul>
-    <li>
-        Загружаешь картинку.
-    </li>
-    <li>
-        Выбираешь интересующую область.
-    </li>
-    <li>
-        Нажимаешь "Искать" на экране или Enter на клавиатуре.
-    </li>
-    <li>
-        Или можно нажать галочку Автопоиск, тогда после выделение области сразу откроется её поиск.
-    </li>
-</ul>
+<div class="container">
+    <div class="container-form" align="center">
+        <form>
+            <label class="pure-button custom-file-upload">
+                <input type="file" id="inputImage"/> Загрузить файл
+            </label>
+            <input type="checkbox" class="checkbox-custom" id="search_auto" value=""/>
+            <label for="search_auto" class="checkbox-custom-label" class="squaredOne">АвтоИскать</label>
+            <label>
+                <button type="button" class="pure-button pure-button-primary" id="search_button">Искать!</button>
+            </label>
+        </form>
+    </div>
+    <br/>
+    <img id="image" src="1spoydjfbrjrMAL.jpg"/>
+    <br/>
+    <div class="container-text">
+        <p>
+            Как пользоваться:
+        </p>
+        <ul>
+            <li>
+                Загружаешь картинку.
+            </li>
+            <li>
+                Выбираешь интересующую область.
+            </li>
+            <li>
+                Нажимаешь "Искать" на экране или Enter на клавиатуре.
+            </li>
+            <li>
+                Или можно нажать галочку АвтоИскать, тогда после выделение области сразу откроется её поиск.
+            </li>
+        </ul>
+    </div>
+</div>
 
 <script src="js/iriska.min.js"></script>
 <link href="css/iriska.css" rel="stylesheet"/>

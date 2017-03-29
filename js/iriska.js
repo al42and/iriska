@@ -1,10 +1,9 @@
 /*jslint browser: true*/
 /*global window*/
 
-
 function el(id){return document.getElementById(id);} // Get elem by ID
 
-function open_post(verb, url, data, target) {
+function openPost(verb, url, data, target) {
     "use strict";
     var form = document.createElement("form");
     form.action = url;
@@ -35,13 +34,12 @@ function searchGoogle(b64) {
         hl: "en",
         encoded_image: null
     };
-    open_post("POST", "https://www.google.com/searchbyimage/upload", formData, "_blank");
+    openPost("POST", "https://www.google.com/searchbyimage/upload", formData, "_blank");
 }
 
 function startSearch(cropper) {
     "use strict";
     var b64Text = cropper.getCroppedCanvas({}).toDataURL("image/png");
-    //window.open(b64Text, "_blank");
     b64Text = b64Text.replace("data:image/png;base64,", "");
     searchGoogle(b64Text);
 }
