@@ -49,7 +49,7 @@ function processGpsCoord(value, letter) {
     var split = (value + '').split(",");
     var result = value;
     var hours = 0, minutes = 0, seconds = 0;
-    if (split.length > 0 && split.length % 2 == 0) {
+    if (split.length > 0 && split.length % 2 === 0) {
         if (split.length >= 2) {
             hours = split[0] / split[1];
         }
@@ -71,7 +71,7 @@ function processGpsCoord(value, letter) {
 function showExifData(file, whereTo) {
     "use strict";
     var reader = new FileReader();
-    var lat = null, long = null, lat_letter = null, long_letter = null;
+    var lat = null, long = null, latLetter = null, longLetter = null;
     var hasGPS = false;
     reader.onloadend = function(e) {
         var exifObj = piexif.load(e.target.result);
@@ -83,28 +83,28 @@ function showExifData(file, whereTo) {
                     var tagValue = exifObj[ifd][tag];
                     switch (tagName) {
                         case "GPSLatitude":
-                            lat = processGpsCoord(tagValue);
+                            lat = tagValue;
                             hasGPS = true;
                             break;
                         case "GPSLongitude":
-                            long = processGpsCoord(tagValue);
+                            long = tagValue;
                             hasGPS = true;
                             break;
                         case "GPSLatitudeRef":
-                            lat_letter = tagValue;
+                            latLetter = tagValue;
                             hasGPS = true;
                             break;
                         case "GPSLongitudeRef":
-                            long_letter = tagValue;
+                            longLetter = tagValue;
                             hasGPS = true;
                             break;
                     }
                 });
             }
         });
-        if (lat && long && lat_letter && long_letter) {
-            lat = processGpsCoord(lat, lat_letter);
-            long = processGpsCoord(long, long_letter);
+        if (lat && long && latLetter && longLetter) {
+            lat = processGpsCoord(lat, latLetter);
+            long = processGpsCoord(long, longLetter);
             text = "<p class=\"text-warning\">В картинке есть GPS-данные: LAT, LONG. <a href='https://www.google.ru/maps/search/LAT,LONG' target='_blank'>Google</a>, <a href='https://yandex.ru/maps/?ll=LONG,LAT&pt=LONG,LAT&spn=0.02,0.02' target='_blank'>Яндекс</p>";
             text = text.replace(/LAT/g, lat).replace(/LONG/g, long);
         } else if (hasGPS) {
