@@ -11,16 +11,23 @@
 <body>
 <div class="container">
     <div class="container-form" align="center">
-        <form>
-            <label class="pure-button custom-file-upload">
-                <input type="file" id="inputImage"/> Загрузить файл
-            </label>
-            <input type="checkbox" class="checkbox-custom" id="search_auto" value=""/>
-            <label for="search_auto" class="checkbox-custom-label" class="squaredOne">АвтоИскать</label>
-            <label>
-                <button type="button" class="pure-button pure-button-primary" id="search_button">Искать!</button>
-            </label>
-        </form>
+            <div class="container-form-elem" style="float: left;">
+                <label class="pure-button custom-file-upload">
+                    <input type="file" id="inputImage"/> Загрузить файл
+                </label>
+                <input type="checkbox" class="checkbox-custom" id="search_auto" value=""/>
+                <label for="search_auto" class="checkbox-custom-label">АвтоИскать</label>
+                <label>
+                    <button type="button" class="pure-button pure-button-primary" id="search_button">Искать!</button>
+                </label>
+            </div>
+            <div class="container-form-elem" style="float: right;">
+                <label for="rotate_image" class="range-custom-label">Поворот:</label>
+                <input type="range" class="range-custom" id="rotate_slider" value="0" min="-180" max="180" style="width: 200px;"/>
+                <label>
+                    <button type="button" class="pure-button" id="reset_button">Сбросить положение картинки</button>
+                </label>
+            </div>
     </div>
     <br/>
     <img id="image" src="1spoydjfbrjrMAL.jpg"/>

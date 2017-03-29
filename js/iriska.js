@@ -51,6 +51,8 @@ window.onload = function () {
     var URL = window.URL || window.webkitURL;
     var image = el("image");
     var searchButton = el("search_button");
+    var resetButton = el("reset_button");
+    var rotateSlider = el("rotate_slider");
     var inputImage = el("inputImage");
 
     var uploadedImageURL;
@@ -71,6 +73,17 @@ window.onload = function () {
     searchButton.onclick = function () {
         startSearch(cropper);
     };
+
+    resetButton.onclick = function() {
+        cropper.reset();
+        rotateSlider.value = 0;
+    };
+
+    rotateSlider.value = 0;
+    rotateSlider.onchange = function () {
+        cropper.rotateTo(rotateSlider.value);
+    };
+
 
     if (URL) {
         inputImage.onchange = function () {
