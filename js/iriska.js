@@ -3,6 +3,15 @@
 
 function el(id){return document.getElementById(id);} // Get elem by ID
 
+function getCookie(name) {
+    "use strict";
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length === 2) {
+        return parts.pop().split(";").shift();
+    }
+}
+
 function openPost(verb, url, data, target) {
     "use strict";
     var form = document.createElement("form");
@@ -24,7 +33,7 @@ function openPost(verb, url, data, target) {
     form.submit();
 }
 
-function searchGoogle(b64) {
+function searchGoogle(b64, target) {
     "use strict";
     var safeB64 = b64.replace(/\//g, "_").replace(/[+]/g, "-");
     var formData = {
@@ -34,14 +43,18 @@ function searchGoogle(b64) {
         hl: "en",
         encoded_image: null
     };
-    openPost("POST", "https://www.google.com/searchbyimage/upload", formData, "_blank");
+    openPost("POST", "https://www.google.com/searchbyimage/upload", formData, target);
 }
 
-function startSearch(cropper) {
+function getCroppedData(cropper) {
     "use strict";
     var b64Text = cropper.getCroppedCanvas({}).toDataURL("image/png");
-    b64Text = b64Text.replace("data:image/png;base64,", "");
-    searchGoogle(b64Text);
+    return b64Text.replace("data:image/png;base64,", "");
+}
+
+function startSearch(cropper, target) {
+    "use strict";
+    searchGoogle(getCroppedData(cropper), target || "_blank");
 }
 
 function processGpsCoord(value, letter) {
@@ -122,6 +135,7 @@ window.onload = function () {
 
     var Cropper = window.Cropper;
     var URL = window.URL || window.webkitURL;
+    var selfHash = new URL(window.location).hash.replace("#","");
     var image = el("image");
     var searchButton = el("search_button");
     var resetButton = el("reset_button");
@@ -129,6 +143,7 @@ window.onload = function () {
     var inputImage = el("inputImage");
 
     var uploadedImageURL;
+    var cookieValue;
     var cropper;
 
     var options = {
@@ -141,10 +156,35 @@ window.onload = function () {
         }
     };
 
+    if (selfHash.length > 0) {
+        cookieValue = window.sessionStorage.getItem(selfHash);
+        window.sessionStorage.removeItem(selfHash);
+        searchGoogle(cookieValue, "_self");
+        return;
+    }
+
     cropper = new Cropper(image, options);
 
-    searchButton.onclick = function () {
-        startSearch(cropper);
+    searchButton.onclick = function (event) {
+        var e = event || window.event;
+        if (e.button === 0) {
+            searchButton.target = "_blank";
+            startSearch(cropper);
+            e.preventDefault();
+        }
+    };
+
+    document.onclick = function (event) {
+        var e = event || window.event;
+        var new_id;
+        if (e.target === searchButton) {
+            if (e.button === 1) {
+                // window.sessionStorage.clear(); // TODO: ?
+                new_id = 'storage' + (new Date()).valueOf();
+                window.sessionStorage.setItem(new_id, getCroppedData(cropper));
+                searchButton.href = '#' + new_id;
+            }
+        }
     };
 
     resetButton.onclick = function() {
