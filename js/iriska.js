@@ -157,8 +157,8 @@ window.onload = function () {
     };
 
     if (selfHash.length > 0) {
-        cookieValue = window.sessionStorage.getItem(selfHash);
-        window.sessionStorage.removeItem(selfHash);
+        cookieValue = window.localStorage.getItem(selfHash);
+        window.localStorage.removeItem(selfHash);
         searchGoogle(cookieValue, "_self");
         return;
     }
@@ -179,9 +179,9 @@ window.onload = function () {
         var new_id;
         if (e.target === searchButton) {
             if (e.button === 1) {
-                // window.sessionStorage.clear(); // TODO: ?
+                // window.localStorage.clear(); // TODO: ?
                 new_id = 'storage' + (new Date()).valueOf();
-                window.sessionStorage.setItem(new_id, getCroppedData(cropper));
+                window.localStorage.setItem(new_id, getCroppedData(cropper));
                 searchButton.href = '#' + new_id;
             }
         }
