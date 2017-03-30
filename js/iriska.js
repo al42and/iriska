@@ -158,9 +158,12 @@ window.onload = function () {
 
     if (selfHash.length > 0) {
         cookieValue = window.localStorage.getItem(selfHash);
-        window.localStorage.removeItem(selfHash);
-        searchGoogle(cookieValue, "_self");
-        return;
+        if (cookieValue && cookieValue.length > 0) {
+            window.localStorage.removeItem(selfHash);
+            searchGoogle(cookieValue, "_self");
+        } else {
+            el("exif-data").innerHTML = "<p class=\"text-warning\">Не могу начать поиск в фоновой вкладке; вероятно, картинка слишком большая</p>";
+        }
     }
 
     cropper = new Cropper(image, options);
