@@ -57,6 +57,7 @@ function startSearch(cropper, target) {
     searchGoogle(getCroppedData(cropper), target || "_blank");
 }
 
+// GPS
 function processGpsCoord(value, letter) {
     "use strict";
     var split = (value + '').split(",");
@@ -141,11 +142,13 @@ window.onload = function () {
     var resetButton = el("reset_button");
     var rotateSlider = el("rotate_slider");
     var inputImage = el("inputImage");
+    var imageContainer = el("imageContainer");
 
     var uploadedImageURL;
     var cookieValue;
     var cropper;
 
+    // Cropper options
     var options = {
         autoCrop: false,
         guides: false,
@@ -156,6 +159,7 @@ window.onload = function () {
         }
     };
 
+    // Redirect to search if we've been opened in background
     if (selfHash.length > 0) {
         cookieValue = window.localStorage.getItem(selfHash);
         if (cookieValue && cookieValue.length > 0) {
@@ -168,6 +172,7 @@ window.onload = function () {
 
     cropper = new Cropper(image, options);
 
+    // Image search button left click
     searchButton.onclick = function (event) {
         var e = event || window.event;
         if (e.button === 0) {
@@ -177,19 +182,21 @@ window.onload = function () {
         }
     };
 
+    // Image search button middle click
     document.onclick = function (event) {
         var e = event || window.event;
-        var new_id;
+        var newId;
         if (e.target === searchButton) {
             if (e.button === 1) {
                 // window.localStorage.clear(); // TODO: ?
-                new_id = 'storage' + (new Date()).valueOf();
-                window.localStorage.setItem(new_id, getCroppedData(cropper));
-                searchButton.href = '#' + new_id;
+                newId = 'storage' + (new Date()).valueOf();
+                window.localStorage.setItem(newId, getCroppedData(cropper));
+                searchButton.href = '#' + newId;
             }
         }
     };
 
+    // Image orientation
     resetButton.onclick = function() {
         var cropBox = cropper.getCropBoxData();
         cropper.reset();
@@ -204,10 +211,29 @@ window.onload = function () {
     // Continuously update image angle
     rotateSlider.onmousemove = rotateSlider.onchange;
 
+    // File drag&drop
+    imageContainer.ondrop = function (event) {
+        var files = event.dataTransfer.files;
+        event.stopPropagation();
+        event.preventDefault();
+        if (files.length > 0) {
+            inputImage.onchange(files);
+        }
+    };
+    imageContainer.ondragenter = function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    };
+    imageContainer.ondragover = function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'copy';
+    };
 
+    // On new file
     if (URL) {
-        inputImage.onchange = function () {
-            var files = this.files;
+        inputImage.onchange = function (external_files) {
+            var files = external_files || this.files;
             var file;
 
             if (cropper && files && files.length) {
