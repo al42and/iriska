@@ -147,6 +147,7 @@ window.onload = function () {
     var uploadedImageURL;
     var cookieValue;
     var cropper;
+    var updateImage;
 
     // Cropper options
     var options = {
@@ -211,13 +212,38 @@ window.onload = function () {
     // Continuously update image angle
     rotateSlider.onmousemove = rotateSlider.onchange;
 
+    updateImage = function (files) {
+        var file;
+
+        if (cropper && files && files.length) {
+            file = files[0];
+
+            if (/^image\/\w+/.test(file.type)) {
+                if (uploadedImageURL) {
+                    URL.revokeObjectURL(uploadedImageURL);
+                }
+
+                uploadedImageURL = URL.createObjectURL(file);
+                image.src = uploadedImageURL;
+                cropper.destroy();
+                cropper = new Cropper(image, options);
+
+                showExifData(file, el("exif-data"));
+                inputImage.value = null;
+            } else {
+                window.alert("Please choose an image file.");
+            }
+        }
+    }
+
     // File drag&drop
     imageContainer.ondrop = function (event) {
         var files = event.dataTransfer.files;
         event.stopPropagation();
         event.preventDefault();
+        console.log(files);
         if (files.length > 0) {
-            inputImage.onchange(files);
+            updateImage(files);
         }
     };
     imageContainer.ondragenter = function (event) {
@@ -232,29 +258,8 @@ window.onload = function () {
 
     // On new file
     if (URL) {
-        inputImage.onchange = function (external_files) {
-            var files = external_files || this.files;
-            var file;
-
-            if (cropper && files && files.length) {
-                file = files[0];
-
-                if (/^image\/\w+/.test(file.type)) {
-                    if (uploadedImageURL) {
-                        URL.revokeObjectURL(uploadedImageURL);
-                    }
-
-                    uploadedImageURL = URL.createObjectURL(file);
-                    image.src = uploadedImageURL;
-                    cropper.destroy();
-                    cropper = new Cropper(image, options);
-
-                    showExifData(file, el("exif-data"));
-                    inputImage.value = null;
-                } else {
-                    window.alert("Please choose an image file.");
-                }
-            }
+        inputImage.onchange = function () {
+            updateImage(this.files);
         };
     } else {
         inputImage.disabled = true;
