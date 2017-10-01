@@ -46,10 +46,12 @@
 
 ```
 dist/
-├── cropper.css     ( 5 KB)
-├── cropper.min.css ( 4 KB)
-├── cropper.js      (90 KB)
-└── cropper.min.js  (33 KB)
+├── cropper.css       ( 5 KB)
+├── cropper.min.css   ( 4 KB)
+├── cropper.js        (90 KB, UMD)
+├── cropper.min.js    (33 KB, UMD, compressed)
+├── cropper.common.js (90 KB, CommonJS)
+└── cropper.esm.js    (90 KB, ES Module)
 ```
 
 
@@ -83,7 +85,6 @@ Initialize with `Cropper` constructor:
 
 - Browser: `window.Cropper`
 - CommonJS: `var Cropper = require('cropperjs')`
-- NodeJS: `var Cropper = require('cropperjs')`
 - ES2015: `import Cropper from 'cropperjs'`
 
 ```html
@@ -172,12 +173,12 @@ If you want to change the global default options, You may use `Cropper.setDefaul
 - Type: `Number`
 - Default: `0`
 - Options:
-  - `0`: the crop box is just within the container
-  - `1`: the crop box should be within the canvas
-  - `2`: the canvas should not be within the container
-  - `3`: the container should be within the canvas
+  - `0`: no restrictions
+  - `1`: restrict the crop box to not exceed the size of the canvas.
+  - `2`: restrict the minimum canvas size to fit within the container. If the proportions of the the canvas and the container differ, the minimum canvas will be surrounded by extra space in one of the dimensions.
+  - `3`: restrict the minimum canvas size to fill fit the container. If the proportions of the canvas and the container are different, the container will not be able to fit the whole canvas in one of the dimensions.
 
-Define the view mode of the cropper.
+Define the view mode of the cropper. If you set `viewMode` to `0`, the crop box can extend outside the canvas, while a value of `1`, `2` or `3` will restrict the crop box to the size of the canvas. A `viewMode` of `2` or `3` will additionally restrict the canvas to the container. Note that if the proportions of the canvas and the container are the same, there is no difference between `2` and `3`.
 
 
 ### dragMode
@@ -859,18 +860,23 @@ Change the crop box position and size with new data.
     - `width`: the destination width of the output canvas
     - `height`: the destination height of the output canvas
     - `fillColor`: a color to fill any alpha values in the output canvas
-  - Note: The aspect ratio of the output canvas will be fitted to aspect ratio of the crop box automatically.
+    - [`imageSmoothingEnabled`](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/imageSmoothingEnabled): set to change if images are smoothed (true, default) or not (false)
+    - [`imageSmoothingQuality`](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/imageSmoothingQuality): set the quality of image smoothing, one of "low", "medium", or "high"
 
 - (return  value):
   - Type: `HTMLCanvasElement`
   - A canvas drawn the cropped image.
+
+- Notes:
+  - The aspect ratio of the output canvas will be fitted to aspect ratio of the crop box automatically.
+  - If you intend to get a JPEG image from the output canvas, you should set the `fillColor` option first, if not, the transparent part in the JPEG image will become black by default.
 
 - Browser support:
   - Basic image: requires [Canvas](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement) support ([IE 9+](http://caniuse.com/canvas)).
   - Rotated image: requires [CSS3 2D Transforms](https://developer.mozilla.org/en-US/docs/Web/CSS/transform) support ([IE 9+](http://caniuse.com/transforms2d)).
   - Cross-origin image: requires HTML5 [CORS settings attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes) support ([IE 11+](http://caniuse.com/cors)).
 
-Get a canvas drawn the cropped image. If it is not cropped, then returns the whole canvas.
+Get a canvas drawn the cropped image. If it is not cropped, then returns a canvas drawn the whole image.
 
 > After then, you can display the canvas as an image directly, or use [HTMLCanvasElement.toDataURL](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL) to get a Data URL, or use [HTMLCanvasElement.toBlob](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob) to get a blob and upload it to server with [FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData) if the browser supports these APIs.
 
@@ -879,7 +885,10 @@ cropper.getCroppedCanvas();
 
 cropper.getCroppedCanvas({
   width: 160,
-  height: 90
+  height: 90,
+  fillColor: '#fff',
+  imageSmoothingEnabled: false,
+  imageSmoothingQuality: 'high',
 });
 
 // Upload cropped image to server if the browser supports `HTMLCanvasElement.toBlob`
@@ -1097,8 +1106,9 @@ Maintained under the [Semantic Versioning guidelines](http://semver.org/).
 
 ## Related projects
 
+- [iron-cropper](https://www.webcomponents.org/element/safetychanger/iron-cropper) (web component) by @safetychanger
 - [react-cropper](https://github.com/roadmanfong/react-cropper) by @roadmanfong
 - [vue-cropperjs](https://github.com/Agontuk/vue-cropperjs) by @Agontuk
-
+- [ember-cropperjs](https://github.com/danielthall/ember-cropperjs) by @danielthall
 
 [⬆ back to top](#table-of-contents)
