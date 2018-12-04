@@ -39,17 +39,12 @@ SOFTWARE.
         }
         
         var segments = splitIntoSegments(jpeg);
-        if (segments[1].slice(0, 2) == "\xff\xe1" && 
-               segments[1].slice(4, 10) == "Exif\x00\x00") {
-            segments = [segments[0]].concat(segments.slice(2));
-        } else if (segments[2].slice(0, 2) == "\xff\xe1" &&
-                   segments[2].slice(4, 10) == "Exif\x00\x00") {
-            segments = segments.slice(0, 2).concat(segments.slice(3));
-        } else {
-            throw("Exif not found.");
-        }
+        var newSegments = segments.filter(function(seg){
+          return  !(seg.slice(0, 2) == "\xff\xe1" &&
+                   seg.slice(4, 10) == "Exif\x00\x00"); 
+        });
         
-        var new_data = segments.join("");
+        var new_data = newSegments.join("");
         if (b64) {
             new_data = "data:image/jpeg;base64," + btoa(new_data);
         }
@@ -631,6 +626,9 @@ SOFTWARE.
     };
 
 
+    if (typeof window !== "undefined" && typeof window.btoa === "function") {
+        var btoa = window.btoa;
+    }
     if (typeof btoa === "undefined") {
         var btoa = function (input) {        var output = "";
             var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
@@ -665,6 +663,9 @@ SOFTWARE.
     }
     
     
+    if (typeof window !== "undefined" && typeof window.atob === "function") {
+        var atob = window.atob;
+    }
     if (typeof atob === "undefined") {
         var atob = function (input) {
             var output = "";
@@ -2438,6 +2439,27 @@ SOFTWARE.
 
     that.InteropIFD = {
         InteroperabilityIndex:1,
+    };
+
+    that.GPSHelper = {
+        degToDmsRational:function (degFloat) {
+            var minFloat = degFloat % 1 * 60;
+            var secFloat = minFloat % 1 * 60;
+            var deg = Math.floor(degFloat);
+            var min = Math.floor(minFloat);
+            var sec = Math.round(secFloat * 100);
+
+            return [[deg, 1], [min, 1], [sec, 100]];
+        },
+
+        dmsRationalToDeg:function (dmsArray, ref) {
+          var sign = (ref === 'S' || ref === 'W') ? -1.0 : 1.0;
+          var deg = sign * dmsArray[0][0] / dmsArray[0][1] +
+                    dmsArray[1][0] / dmsArray[1][1] / 60.0 +
+                    dmsArray[2][0] / dmsArray[2][1] / 3600.0;
+
+          return deg;
+        }
     };
     
     
