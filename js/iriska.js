@@ -39,7 +39,7 @@ function searchGoogle(b64, target) {
     var formData = {
         image_url: null,
         image_content: safeB64,
-        filename: "cropped.png",
+        filename: "cropped.jpeg",
         hl: "en",
         encoded_image: null
     };
@@ -48,8 +48,8 @@ function searchGoogle(b64, target) {
 
 function getCroppedData(cropper) {
     "use strict";
-    var b64Text = cropper.getCroppedCanvas({}).toDataURL("image/png");
-    return b64Text.replace("data:image/png;base64,", "");
+    var b64Text = cropper.getCroppedCanvas({}).toDataURL("image/jpeg");
+    return b64Text.replace("data:image/jpeg;base64,", "");
 }
 
 function startSearch(cropper, target) {
