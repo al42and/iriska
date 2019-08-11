@@ -1,27 +1,20 @@
 /*jslint browser: true*/
 /*global window,piexif*/
 
-function el(id){return document.getElementById(id);} // Get elem by ID
-
-function getCookie(name) {
-    "use strict";
-    var value = "; " + document.cookie;
-    var parts = value.split("; " + name + "=");
-    if (parts.length === 2) {
-        return parts.pop().split(";").shift();
-    }
-}
+function el(id){
+    return document.getElementById(id);
+} // Get elem by ID
 
 function openPost(verb, url, data, target) {
     "use strict";
-    var form = document.createElement("form");
+    let form = document.createElement("form");
     form.action = url;
     form.method = verb;
     form.enctype = "multipart/form-data";
     form.target = target || "_self";
     if (data) {
         Object.keys(data).forEach(function (key) {
-            var input = document.createElement("input");
+            let input = document.createElement("input");
             input.type = "hidden";
             input.name = key;
             input.value = data[key];
@@ -35,8 +28,8 @@ function openPost(verb, url, data, target) {
 
 function searchGoogle(b64, target) {
     "use strict";
-    var safeB64 = b64.replace(/\//g, "_").replace(/[+]/g, "-");
-    var formData = {
+    const safeB64 = b64.replace(/\//g, "_").replace(/[+]/g, "-");
+    const formData = {
         image_url: null,
         image_content: safeB64,
         filename: "cropped.jpeg",
@@ -48,7 +41,7 @@ function searchGoogle(b64, target) {
 
 function getCroppedData(cropper) {
     "use strict";
-    var b64Text = cropper.getCroppedCanvas({}).toDataURL("image/jpeg");
+    const b64Text = cropper.getCroppedCanvas({}).toDataURL("image/jpeg");
     return b64Text.replace("data:image/jpeg;base64,", "");
 }
 
@@ -60,9 +53,9 @@ function startSearch(cropper, target) {
 // GPS
 function processGpsCoord(value, letter) {
     "use strict";
-    var split = (value + '').split(",");
-    var result = value;
-    var hours = 0, minutes = 0, seconds = 0;
+    const split = (value + '').split(",");
+    let result = value;
+    let hours = 0, minutes = 0, seconds = 0;
     if (split.length > 0 && split.length % 2 === 0) {
         if (split.length >= 2) {
             hours = split[0] / split[1];
@@ -84,12 +77,12 @@ function processGpsCoord(value, letter) {
 
 function showExifData(file, whereTo) {
     "use strict";
-    var reader = new FileReader();
-    var lat = null, long = null, latLetter = null, longLetter = null;
-    var hasGPS = false;
+    let reader = new FileReader();
+    let lat = null, long = null, latLetter = null, longLetter = null;
+    let hasGPS = false;
     reader.onloadend = function(e) {
-        var exifObj = piexif.load(e.target.result);
-        var text = "";
+       const exifObj = piexif.load(e.target.result);
+        let text = "";
         Object.keys(exifObj).forEach(function (ifd) {
             if (ifd !== "thumbnail") {
                 Object.keys(exifObj[ifd]).forEach(function (tag) {
@@ -134,23 +127,23 @@ function showExifData(file, whereTo) {
 window.onload = function () {
     "use strict";
 
-    var Cropper = window.Cropper;
-    var URL = window.URL || window.webkitURL;
-    var selfHash = new URL(window.location).hash.replace("#","");
-    var image = el("image");
-    var searchButton = el("search_button");
-    var resetButton = el("reset_button");
-    var rotateSlider = el("rotate_slider");
-    var inputImage = el("inputImage");
-    var imageContainer = el("imageContainer");
+    const Cropper = window.Cropper;
+    const URL = window.URL || window.webkitURL;
+    const selfHash = new URL(window.location).hash.replace("#","");
+    const image = el("image");
+    const searchButton = el("search_button");
+    const resetButton = el("reset_button");
+    const rotateSlider = el("rotate_slider");
+    const inputImage = el("inputImage");
+    const imageContainer = el("imageContainer");
 
-    var uploadedImageURL;
-    var cookieValue;
-    var cropper;
-    var updateImage;
+    let uploadedImageURL;
+    let cookieValue;
+    let cropper;
+    let updateImage;
 
     // Cropper options
-    var options = {
+    const options = {
         autoCrop: false,
         guides: false,
         cropend: function () {
@@ -175,7 +168,7 @@ window.onload = function () {
 
     // Image search button left click
     searchButton.onclick = function (event) {
-        var e = event || window.event;
+        const e = event || window.event;
         if (e.button === 0) {
             searchButton.target = "_blank";
             startSearch(cropper);
@@ -185,8 +178,8 @@ window.onload = function () {
 
     // Image search button middle click
     document.onclick = function (event) {
-        var e = event || window.event;
-        var newId;
+        const e = event || window.event;
+        let newId;
         if (e.target === searchButton) {
             if (e.button === 1) {
                 // window.localStorage.clear(); // TODO: ?
@@ -199,7 +192,7 @@ window.onload = function () {
 
     // Image orientation
     resetButton.onclick = function() {
-        var cropBox = cropper.getCropBoxData();
+        let cropBox = cropper.getCropBoxData();
         cropper.reset();
         cropper.setCropBoxData(cropBox);
         rotateSlider.value = 0;
@@ -213,7 +206,7 @@ window.onload = function () {
     rotateSlider.onmousemove = rotateSlider.onchange;
 
     updateImage = function (files) {
-        var file;
+        let file;
 
         if (cropper && files && files.length) {
             file = files[0];
@@ -234,11 +227,11 @@ window.onload = function () {
                 window.alert("Please choose an image file.");
             }
         }
-    }
+    };
 
     // File drag&drop
     imageContainer.ondrop = function (event) {
-        var files = event.dataTransfer.files;
+        const files = event.dataTransfer.files;
         event.stopPropagation();
         event.preventDefault();
         console.log(files);
@@ -267,18 +260,16 @@ window.onload = function () {
     }
 
     document.body.onkeydown = function (event) {
-        var e = event || window.event;
+        const e = event || window.event;
 
         if (!cropper) {
             return;
         }
 
         // Use http://keycode.info/ for help
-        switch (e.keyCode) {
-            case 13: // Enter
+        if (e.keyCode == 13) {  // Pressed "Enter"
                 e.preventDefault();
                 startSearch(cropper);
-                break;
         }
     };
 };

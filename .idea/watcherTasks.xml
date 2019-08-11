@@ -8,14 +8,15 @@
       <option name="exitCodeBehavior" value="ERROR" />
       <option name="fileExtension" value="js" />
       <option name="immediateSync" value="true" />
-      <option name="name" value="UglifyJS" />
+      <option name="name" value="UglifyES" />
       <option name="output" value="$FileNameWithoutExtension$.min.js" />
       <option name="outputFilters">
         <array />
       </option>
       <option name="outputFromStdout" value="false" />
-      <option name="program" value="$PROJECT_DIR$/node_modules/uglify-js/bin/uglifyjs" />
-      <option name="scopeName" value="Changed Files" />
+      <option name="program" value="$PROJECT_DIR$/node_modules/uglify-es/bin/uglifyjs" />
+      <option name="runOnExternalChanges" value="true" />
+      <option name="scopeName" value="All Changed Files" />
       <option name="trackOnlyRoot" value="true" />
       <option name="workingDir" value="$FileDir$" />
       <envs />
