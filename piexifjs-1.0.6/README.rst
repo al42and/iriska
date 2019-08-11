@@ -9,23 +9,35 @@ Piexifjs
 Read and modify exif. Library to modify exif in JS(both client-side and Node.js).
 http://piexifjs.readthedocs.org/en/latest/index.html
 
+Notice and Warning!
+-------------------
+
+We are implementing v2.0. This version would include a few big changes. If you won't ready to use, don't update this library.
+ 
+```
+npm install piexifjs@1.0.4
+```
+ 
+Thank you for using piexifjs!
+
+
 How to Use
 ----------
 
-- *var exifObj = piexif.load(jpegData)* - Get exif data as *object*. *jpegData* must be a *string* that starts with "\data:image/jpeg;base64,"(DataURL), "\\xff\\xd8", or "Exif".
-- *var exifStr = piexif.dump(exifObj)* - Get exif as *string* to insert into JPEG.
-- *piexif.insert(exifStr, jpegData)* - Insert exif into JPEG. If *jpegData* is DataURL, returns JPEG as DataURL. Else if *jpegData* is binary as *string*, returns JPEG as binary as *string*.
-- *piexif.remove(jpegData)* - Remove exif from JPEG. If *jpegData* is DataURL, returns JPEG as DataURL. Else if *jpegData* is binary as *string*, returns JPEG as binary as *string*.
+- :code:`var exifObj = piexif.load(jpegData)` - Get exif data as *object*. *jpegData* must be a *string* that starts with "\data:image/jpeg;base64,"(DataURL), "\\xff\\xd8", or "Exif".
+- :code:`var exifStr = piexif.dump(exifObj)` - Get exif as *string* to insert into JPEG.
+- :code:`piexif.insert(exifStr, jpegData)` - Insert exif into JPEG. If *jpegData* is DataURL, returns JPEG as DataURL. Else if *jpegData* is binary as *string*, returns JPEG as binary as *string*.
+- :code:`piexif.remove(jpegData)` - Remove exif from JPEG. If *jpegData* is DataURL, returns JPEG as DataURL. Else if *jpegData* is binary as *string*, returns JPEG as binary as *string*.
 
 Use with File API or Canvas API.
 
 Example
 -------
 
-::
+.. code:: html
 
     <input type="file" id="files" />
-    <script source="/js/piexif.js" />
+    <script src="/js/piexif.js" />
     <script>
     function handleFileSelect(evt) {
         var file = evt.target.files[0];
